@@ -4,10 +4,11 @@ class GetThreadUseCase {
         this._commentRepository = commentRepository
     }
 
-    async execute(useCasePayload) {
-        const { threadId } = useCasePayload
+    async execute(useCaseParams) {
+        const { threadId } = useCaseParams
 
         const thread = await this._threadRepository.getThreadById(threadId)
+
         const comments = await this._commentRepository.getCommentsByThreadId(
             threadId
         )
