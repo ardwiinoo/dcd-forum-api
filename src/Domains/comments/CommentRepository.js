@@ -3,15 +3,11 @@ class CommentRepository {
         throw new Error('COMMENT_REPOSITORY.METHOD_NOT_IMPLEMENTED')
     }
 
-    async validateCommentById(commentId) {
+    async verifyCommentAvailability({ commentId, threadId }) {
         throw new Error('COMMENT_REPOSITORY.METHOD_NOT_IMPLEMENTED')
     }
 
-    async verifyCommentAvailability(commentId, threadId) {
-        throw new Error('COMMENT_REPOSITORY.METHOD_NOT_IMPLEMENTED')
-    }
-
-    async validateCommentOwner(commentId, owner) {
+    async validateCommentOwner({ commentId, owner }) {
         throw new Error('COMMENT_REPOSITORY.METHOD_NOT_IMPLEMENTED')
     }
 
