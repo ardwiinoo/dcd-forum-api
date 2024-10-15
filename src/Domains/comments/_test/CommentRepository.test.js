@@ -10,24 +10,20 @@ describe('CommentRepository interface', () => {
             'COMMENT_REPOSITORY.METHOD_NOT_IMPLEMENTED'
         )
 
-        await expect(
-            commentRepository.validateCommentById('')
-        ).rejects.toThrowError('COMMENT_REPOSITORY.METHOD_NOT_IMPLEMENTED')
-
-        await expect(commentRepository.deleteComment('')).rejects.toThrowError(
+        await expect(commentRepository.deleteComment({})).rejects.toThrowError(
             'COMMENT_REPOSITORY.METHOD_NOT_IMPLEMENTED'
         )
 
         await expect(
-            commentRepository.verifyCommentAvailability('')
+            commentRepository.verifyCommentAvailability({})
         ).rejects.toThrowError('COMMENT_REPOSITORY.METHOD_NOT_IMPLEMENTED')
 
         await expect(
-            commentRepository.validateCommentOwner('', '')
+            commentRepository.validateCommentOwner({})
         ).rejects.toThrowError('COMMENT_REPOSITORY.METHOD_NOT_IMPLEMENTED')
 
         await expect(
-            commentRepository.getCommentsByThreadId('')
+            commentRepository.getCommentsByThreadId({})
         ).rejects.toThrowError('COMMENT_REPOSITORY.METHOD_NOT_IMPLEMENTED')
     })
 })

@@ -7,7 +7,7 @@ describe('a AddThread entities', () => {
             title: 'abc',
         }
 
-        // Action & Assert
+        // Action and Assert
         expect(() => new AddThread(payload)).toThrowError(
             'ADD_THREAD.NOT_CONTAIN_NEEDED_PROPERTY'
         )
@@ -21,7 +21,7 @@ describe('a AddThread entities', () => {
             owner: {},
         }
 
-        // Action & Assert
+        // Action and Assert
         expect(() => new AddThread(payload)).toThrowError(
             'ADD_THREAD.NOT_MEET_DATA_TYPE_SPECIFICATION'
         )

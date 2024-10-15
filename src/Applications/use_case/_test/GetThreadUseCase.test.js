@@ -1,26 +1,38 @@
-const CommentRepository = require('../../../Domains/comments/CommentRepository')
-const DetailThread = require('../../../Domains/threads/entities/DetailThread')
-const ThreadRepository = require('../../../Domains/threads/ThreadRepository')
 const GetThreadUseCase = require('../GetThreadUseCase')
+const ThreadRepository = require('../../../Domains/threads/ThreadRepository')
+const CommentRepository = require('../../../Domains/comments/CommentRepository')
+const DetailComment = require('../../../Domains/comments/entities/DetailComment')
 
 describe('GetThreadUseCase', () => {
-    it('should orchestrate the get detail thread action correctly', async () => {
+    it('should orchestrating get detail thread action correctly', async () => {
         // Arrange
-        const useCasePayload = { threadId: 'thread-123' }
+        const params = { threadId: 'thread-123' }
+
+        const thread = {
+            id: 'thread-123',
+            title: 'sebuah thread',
+            body: 'sebuah body',
+            username: 'dicoding',
+            date: new Date().toISOString(),
+        }
+
+        const comments = [
+            new DetailComment({
+                id: 'comment-123',
+                username: 'dicoding',
+                date: new Date().toISOString(),
+                content: 'sebuah komentar',
+                isDeleted: false,
+            }),
+        ]
+
         const expectedThread = {
             id: 'thread-123',
-            title: 'ini judul',
-            body: 'ini body',
-            username: 'ardwiinoo',
-            date: '2024-10-12T22:41:00',
-            comments: [
-                {
-                    id: 'comment-123',
-                    username: 'dicoding',
-                    content: 'ini konten',
-                    date: '2024-10-12T22:41:00',
-                },
-            ],
+            title: 'sebuah thread',
+            body: 'sebuah body',
+            username: 'dicoding',
+            date: new Date().toISOString(),
+            comments,
         }
 
         // creating dependency of use case
@@ -28,32 +40,12 @@ describe('GetThreadUseCase', () => {
         const mockCommentRepository = new CommentRepository()
 
         // mocking needed function
-        mockThreadRepository.getThreadById = jest.fn().mockImplementation(() =>
-            Promise.resolve(
-                new DetailThread({
-                    id: 'thread-123',
-                    title: 'ini judul',
-                    body: 'ini body',
-                    username: 'ardwiinoo',
-                    date: '2024-10-12T22:41:00',
-                    comments: [],
-                })
-            )
-        )
-
+        mockThreadRepository.getThreadById = jest
+            .fn()
+            .mockImplementation(() => Promise.resolve(thread))
         mockCommentRepository.getCommentsByThreadId = jest
             .fn()
-            .mockImplementation(() =>
-                Promise.resolve([
-                    {
-                        id: 'comment-123',
-                        username: 'dicoding',
-                        content: 'ini konten',
-                        date: '2024-10-12T22:41:00',
-                        isDeleted: false,
-                    },
-                ])
-            )
+            .mockImplementation(() => Promise.resolve(comments))
 
         // creating use case instance
         const getThreadUseCase = new GetThreadUseCase({
@@ -62,85 +54,15 @@ describe('GetThreadUseCase', () => {
         })
 
         // Action
-        const thread = await getThreadUseCase.execute(useCasePayload)
+        const threadDetail = await getThreadUseCase.execute(params)
 
         // Assert
-        expect(thread).toMatchObject(expectedThread)
         expect(mockThreadRepository.getThreadById).toBeCalledWith(
-            useCasePayload.threadId
+            params.threadId
         )
         expect(mockCommentRepository.getCommentsByThreadId).toBeCalledWith(
-            useCasePayload.threadId
+            params.threadId
         )
-    })
-
-    it('should orchestrating the find thread action correctly, with deleted comment', async () => {
-        // Arrange
-        const useCasePayload = { threadId: 'thread-123' }
-        const expectedThread = {
-            id: 'thread-123',
-            title: 'ini judul',
-            body: 'ini body',
-            username: 'ardwiinoo',
-            date: '2024-10-12T22:41:00',
-            comments: [
-                {
-                    id: 'comment-123',
-                    username: 'dicoding',
-                    content: '**komentar telah dihapus**',
-                    date: '2024-10-12T22:41:00',
-                },
-            ],
-        }
-
-        // creating dependency of use case
-        const mockThreadRepository = new ThreadRepository()
-        const mockCommentRepository = new CommentRepository()
-
-        // mocking needed function
-        mockThreadRepository.getThreadById = jest.fn().mockImplementation(() =>
-            Promise.resolve(
-                new DetailThread({
-                    id: 'thread-123',
-                    title: 'ini judul',
-                    body: 'ini body',
-                    username: 'ardwiinoo',
-                    date: '2024-10-12T22:41:00',
-                    comments: [],
-                })
-            )
-        )
-
-        mockCommentRepository.getCommentsByThreadId = jest
-            .fn()
-            .mockImplementation(() =>
-                Promise.resolve([
-                    {
-                        id: 'comment-123',
-                        username: 'dicoding',
-                        content: '**komentar telah dihapus**',
-                        date: '2024-10-12T22:41:00',
-                        isDeleted: true,
-                    },
-                ])
-            )
-
-        // creating use case instance
-        const getThreadUseCase = new GetThreadUseCase({
-            threadRepository: mockThreadRepository,
-            commentRepository: mockCommentRepository,
-        })
-
-        // Action
-        const thread = await getThreadUseCase.execute(useCasePayload)
-
-        // Assert
-        expect(thread).toMatchObject(expectedThread)
-        expect(mockThreadRepository.getThreadById).toBeCalledWith(
-            useCasePayload.threadId
-        )
-        expect(mockCommentRepository.getCommentsByThreadId).toBeCalledWith(
-            useCasePayload.threadId
-        )
+        expect(threadDetail).toStrictEqual(expectedThread)
     })
 })

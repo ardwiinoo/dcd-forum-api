@@ -1,16 +1,17 @@
-const CommentRepository = require('../../../Domains/comments/CommentRepository')
 const DeleteCommentUseCase = require('../DeleteCommentUseCase')
+const CommentRepository = require('../../../Domains/comments/CommentRepository')
 
 describe('DeleteCommentUseCase', () => {
-    it('should orchestrating the delete comment action correctly', async () => {
+    it('should orchestrating delete comment correctly', async () => {
         // Arrange
-        const useCasePayload = {
+        const params = {
             commentId: 'comment-123',
             threadId: 'thread-123',
-            owner: 'user-123',
         }
 
-        // creating dependencies of use case
+        const owner = 'user-123'
+
+        // creating dependency of use case
         const mockCommentRepository = new CommentRepository()
 
         // mocking needed function
@@ -30,20 +31,19 @@ describe('DeleteCommentUseCase', () => {
         })
 
         // Action
-        await deleteCommentUseCase.execute(useCasePayload)
+        await deleteCommentUseCase.execute(params, owner)
 
         // Assert
-        expect(mockCommentRepository.verifyCommentAvailability).toBeCalledWith(
-            useCasePayload.commentId,
-            useCasePayload.threadId
-        )
-        expect(mockCommentRepository.validateCommentOwner).toBeCalledWith(
-            useCasePayload.commentId,
-            useCasePayload.threadId,
-            useCasePayload.owner
-        )
+        expect(mockCommentRepository.verifyCommentAvailability).toBeCalledWith({
+            commentId: params.commentId,
+            threadId: params.threadId,
+        })
+        expect(mockCommentRepository.validateCommentOwner).toBeCalledWith({
+            commentId: params.commentId,
+            owner,
+        })
         expect(mockCommentRepository.deleteComment).toBeCalledWith(
-            useCasePayload.commentId
+            params.commentId
         )
     })
 })
