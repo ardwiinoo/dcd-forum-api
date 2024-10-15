@@ -2,7 +2,7 @@ const DetailThread = require('../DetailThread')
 
 describe('a DetailThread entities', () => {
     it('should throw error when payload did not contain needed property', () => {
-        // arrange
+        // Arrange
         const payload = {
             id: 'thread-123',
             title: 'ini judul',
@@ -11,31 +11,31 @@ describe('a DetailThread entities', () => {
             comments: [],
         }
 
-        // action and assert
+        // Action and Assert
         expect(() => new DetailThread(payload)).toThrowError(
             'DETAIL_THREAD.NOT_CONTAIN_NEEDED_PROPERTY'
         )
     })
 
     it('should throw error when payload did not meet data type specification', () => {
-        // arrange
+        // Arrange
         const payload = {
             id: true,
             title: ['ini judul'],
             body: 999,
             date: {},
             username: [true, false],
-            comments: 'Example Comments',
+            comments: 'ini komentar',
         }
 
-        // action and assert
+        // Action and Assert
         expect(() => new DetailThread(payload)).toThrowError(
             'DETAIL_THREAD.NOT_MEET_DATA_TYPE_SPECIFICATION'
         )
     })
 
     it('should create detailThread object correctly', () => {
-        // arrange
+        // Arrange
         const payload = {
             id: 'thread-123',
             title: 'ini judul',
@@ -45,12 +45,12 @@ describe('a DetailThread entities', () => {
             comments: [],
         }
 
-        // action
+        // Action
         const { id, title, body, date, username, comments } = new DetailThread(
             payload
         )
 
-        // assert
+        // Assert
         expect(id).toEqual(payload.id)
         expect(title).toEqual(payload.title)
         expect(body).toEqual(payload.body)
