@@ -59,18 +59,18 @@ describe('GetThreadUseCase', () => {
             title: 'sebuah thread',
             body: 'sebuah body',
             username: 'dicoding',
-            date: new Date().toISOString(),
+            date: thread.date,
             comments: [
                 {
                     id: 'comment-123',
                     content: 'sebuah komentar',
-                    date: new Date().toISOString(),
+                    date: comments[0].date,
                     username: 'dicoding',
                     replies: [
                         {
                             id: 'reply-124',
                             content: '**balasan telah dihapus**',
-                            date: new Date().toISOString(),
+                            date: replies[1].date,
                             username: 'dicoding',
                         },
                     ],
@@ -78,12 +78,12 @@ describe('GetThreadUseCase', () => {
                 {
                     id: 'comment-124',
                     content: '**komentar telah dihapus**',
-                    date: new Date().toISOString(),
+                    date: comments[1].date,
                     username: 'dicoding',
                     replies: [
                         {
                             content: 'sebuah balasan',
-                            date: new Date().toISOString(),
+                            date: replies[0].date,
                             id: 'reply-123',
                             username: 'dicoding',
                         },
@@ -122,11 +122,9 @@ describe('GetThreadUseCase', () => {
         expect(mockThreadRepository.getThreadById).toBeCalledWith(
             params.threadId
         )
-
         expect(mockCommentRepository.getCommentsByThreadId).toBeCalledWith(
             params.threadId
         )
-
         expect(mockReplyRepository.getRepliesByThreadId).toBeCalledWith(
             params.threadId
         )
