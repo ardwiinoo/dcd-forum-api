@@ -1,6 +1,6 @@
 class DetailComment {
     constructor(payload) {
-        this._validatePayload(payload)
+        this._verifyPayload(payload)
 
         const { id, username, date, content, isDeleted } = payload
 
@@ -10,7 +10,7 @@ class DetailComment {
         this.content = isDeleted ? '**komentar telah dihapus**' : content
     }
 
-    _validatePayload({ id, username, date, content, isDeleted }) {
+    _verifyPayload({ id, username, date, content, isDeleted }) {
         if (
             !id ||
             !username ||
@@ -24,9 +24,9 @@ class DetailComment {
         if (
             typeof id !== 'string' ||
             typeof username !== 'string' ||
-            typeof date !== 'string' ||
             typeof content !== 'string' ||
-            typeof isDeleted !== 'boolean'
+            typeof isDeleted !== 'boolean' ||
+            typeof date !== 'string'
         ) {
             throw new Error('DETAIL_COMMENT.NOT_MEET_DATA_TYPE_SPECIFICATION')
         }
