@@ -6,7 +6,7 @@ describe('ReplyRepository interface', () => {
         const replyRepository = new ReplyRepository()
 
         // Action and Assert
-        await expect(replyRepository.addNewReply({})).rejects.toThrowError(
+        await expect(replyRepository.addReply({})).rejects.toThrowError(
             'REPLY_REPOSITORY.METHOD_NOT_IMPLEMENTED'
         )
 
@@ -19,7 +19,7 @@ describe('ReplyRepository interface', () => {
         ).rejects.toThrowError('REPLY_REPOSITORY.METHOD_NOT_IMPLEMENTED')
 
         await expect(
-            replyRepository.verifyReplyIsExist({})
+            replyRepository.verifyReplyAvailability({})
         ).rejects.toThrowError('REPLY_REPOSITORY.METHOD_NOT_IMPLEMENTED')
 
         await expect(replyRepository.verifyReplyOwner({})).rejects.toThrowError(
