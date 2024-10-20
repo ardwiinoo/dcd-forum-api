@@ -7,7 +7,7 @@ const AddReply = require('../../../Domains/replies/entities/AddReply')
 describe('AddReplyUseCase', () => {
     it('should orchestrate the add reply action correctly', async () => {
         // Arrange
-        const payload = { content: 'sebuah balasan' }
+        const payload = { content: 'sebuah reply' }
         const params = { threadId: 'thread-123', commentId: 'comment-123' }
         const owner = 'user-123'
 
@@ -21,10 +21,10 @@ describe('AddReplyUseCase', () => {
         const mockCommentRepository = new CommentRepository()
         const mockReplyRepository = new ReplyRepository()
 
-        mockCommentRepository.verifyCommentIsExist = jest
+        mockCommentRepository.verifyCommentAvailability = jest
             .fn()
             .mockImplementation(() => Promise.resolve())
-        mockReplyRepository.addNewReply = jest.fn().mockImplementation(() =>
+        mockReplyRepository.addReply = jest.fn().mockImplementation(() =>
             Promise.resolve(
                 new AddedReply({
                     id: 'reply-123',
@@ -43,12 +43,12 @@ describe('AddReplyUseCase', () => {
         const addedReply = await addReplyUseCase.execute(payload, params, owner)
 
         // Assert
-        expect(mockCommentRepository.verifyCommentIsExist).toBeCalledWith({
+        expect(mockCommentRepository.verifyCommentAvailability).toBeCalledWith({
             commentId: params.commentId,
             threadId: params.threadId,
         })
 
-        expect(mockReplyRepository.addNewReply).toBeCalledWith(
+        expect(mockReplyRepository.addReply).toBeCalledWith(
             new AddReply({
                 content: payload.content,
                 owner,
