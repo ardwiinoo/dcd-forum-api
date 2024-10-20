@@ -4,7 +4,7 @@ describe('a DetailComment entities', () => {
     it('should throw error when payload does not contain needed property', () => {
         const payload = {
             id: 'comment-123',
-            date: '2024-10-12T22:41:00',
+            date: new Date('2024-10-12T22:41:00'),
             content: 'ini komentar',
         }
 
@@ -17,7 +17,7 @@ describe('a DetailComment entities', () => {
         const payload = {
             id: 123,
             username: 'user-123',
-            date: '2024-10-12T22:41:00',
+            date: new Date('2024-10-12T22:41:00'),
             content: 'ini komentar',
             isDeleted: 'false',
         }
@@ -31,7 +31,7 @@ describe('a DetailComment entities', () => {
         const payload = {
             id: 'comment-123',
             username: 'user-123',
-            date: '2024-10-12T22:41:00',
+            date: new Date().toISOString(),
             content: 'ini komentar',
             isDeleted: false,
         }
@@ -48,7 +48,7 @@ describe('a DetailComment entities', () => {
         const payload = {
             id: 'comment-123',
             username: 'user-123',
-            date: '2024-10-12T22:41:00',
+            date: new Date().toISOString(),
             content: 'ini komentar',
             isDeleted: true,
         }

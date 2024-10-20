@@ -9,7 +9,7 @@ class AddCommentUseCase {
     async execute(payload, params, owner) {
         const { threadId } = params
 
-        await this._threadRepository.validateThreadById(threadId)
+        await this._threadRepository.validateThreadAvailability(threadId)
 
         const addComment = new AddComment({
             ...payload,

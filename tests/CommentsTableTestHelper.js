@@ -4,14 +4,14 @@ const pool = require('../src/Infrastructures/database/postgres/pool')
 const CommentsTableTestHelper = {
     async addComment({
         id = 'comment-123',
-        content = 'some comment',
+        content = 'sebuah comment',
         owner = 'user-123',
         threadId = 'thread-123',
         isDeleted = false,
         date = new Date().toISOString(),
     }) {
         const query = {
-            text: 'INSERT INTO comments (id, content, owner, thread_id, is_deleted, date) VALUES($1, $2, $3, $4, $5, $6)',
+            text: 'INSERT INTO comments (id, content, owner, thread_id, is_deleted, date) VALUES ($1, $2, $3, $4, $5, $6)',
             values: [id, content, owner, threadId, isDeleted, date],
         }
 

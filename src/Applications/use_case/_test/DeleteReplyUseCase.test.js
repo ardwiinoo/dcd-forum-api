@@ -15,7 +15,7 @@ describe('DeleteReplyUseCase', () => {
         // Mocking
         const mockReplyRepository = new ReplyRepository()
 
-        mockReplyRepository.verifyReplyIsExist = jest
+        mockReplyRepository.verifyReplyAvailability = jest
             .fn()
             .mockImplementation(() => Promise.resolve())
 
@@ -36,7 +36,7 @@ describe('DeleteReplyUseCase', () => {
         await deleteReplyUseCase.execute(params, owner)
 
         // Assert
-        expect(mockReplyRepository.verifyReplyIsExist).toBeCalledWith({
+        expect(mockReplyRepository.verifyReplyAvailability).toBeCalledWith({
             threadId: params.threadId,
             commentId: params.commentId,
             replyId: params.replyId,

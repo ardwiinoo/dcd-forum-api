@@ -1,5 +1,5 @@
 class ReplyRepository {
-    async addNewReply(newReply) {
+    async addReply(newReply) {
         throw new Error('REPLY_REPOSITORY.METHOD_NOT_IMPLEMENTED')
     }
 
@@ -11,7 +11,7 @@ class ReplyRepository {
         throw new Error('REPLY_REPOSITORY.METHOD_NOT_IMPLEMENTED')
     }
 
-    async verifyReplyIsExist({ threadId, commentId, replyId }) {
+    async verifyReplyAvailability({ threadId, commentId, replyId }) {
         throw new Error('REPLY_REPOSITORY.METHOD_NOT_IMPLEMENTED')
     }
 

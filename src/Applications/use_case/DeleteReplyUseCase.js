@@ -5,7 +5,7 @@ class DeleteReplyUseCase {
 
     async execute(useCaseParams, userId) {
         const { threadId, commentId, replyId } = useCaseParams
-        await this._replyRepository.verifyReplyIsExist({
+        await this._replyRepository.verifyReplyAvailability({
             threadId,
             commentId,
             replyId,

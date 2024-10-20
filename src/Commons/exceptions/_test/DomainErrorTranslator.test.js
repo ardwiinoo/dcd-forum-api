@@ -90,7 +90,7 @@ describe('DomainErrorTranslator', () => {
             )
         ).toStrictEqual(
             new InvariantError(
-                'tidak dapat membuat balasan comment baru karena properti yang dibutuhkan tidak ada'
+                'tidak dapat membuat reply comment baru karena properti yang dibutuhkan tidak ada'
             )
         )
         expect(
@@ -99,7 +99,7 @@ describe('DomainErrorTranslator', () => {
             )
         ).toStrictEqual(
             new InvariantError(
-                'tidak dapat membuat balasan comment baru karena tipe data tidak sesuai'
+                'tidak dapat membuat reply comment baru karena tipe data tidak sesuai'
             )
         )
     })

@@ -1,7 +1,9 @@
 const NotFoundError = require('../../Commons/exceptions/NotFoundError')
+const InvariantError = require('../../Commons/exceptions/InvariantError')
 const AuthorizationError = require('../../Commons/exceptions/AuthorizationError')
 const CommentRepository = require('../../Domains/comments/CommentRepository')
 const AddedComment = require('../../Domains/comments/entities/AddedComment')
+const DetailComment = require('../../Domains/comments/entities/DetailComment')
 
 class CommentRepositoryPostgres extends CommentRepository {
     constructor(pool, idGenerator) {
@@ -26,20 +28,7 @@ class CommentRepositoryPostgres extends CommentRepository {
         })
     }
 
-    async validateCommentById(commentId) {
-        const query = {
-            text: 'SELECT * FROM comments WHERE id = $1',
-            values: [commentId],
-        }
-
-        const { rowCount } = await this._pool.query(query)
-
-        if (!rowCount) {
-            throw new NotFoundError('Comment tidak ditemukan')
-        }
-    }
-
-    async verifyCommentAvailability(commentId, threadId) {
+    async verifyCommentAvailability({ commentId, threadId }) {
         const query = {
             text: 'SELECT * FROM comments WHERE id = $1 AND thread_id = $2 AND is_deleted = FALSE',
             values: [commentId, threadId],
@@ -52,10 +41,10 @@ class CommentRepositoryPostgres extends CommentRepository {
         }
     }
 
-    async validateCommentOwner(commentId, threadId, owner) {
+    async validateCommentOwner({ commentId, owner }) {
         const query = {
-            text: 'SELECT * FROM comments WHERE id = $1 AND owner = $2 AND thread_id = $3 AND is_deleted = FALSE',
-            values: [commentId, owner, threadId],
+            text: 'SELECT 1 FROM comments WHERE id = $1 AND owner = $2',
+            values: [commentId, owner],
         }
 
         const { rowCount } = await this._pool.query(query)
@@ -81,16 +70,32 @@ class CommentRepositoryPostgres extends CommentRepository {
     }
 
     async getCommentsByThreadId(threadId) {
-        const commentsQuery = {
-            text: 'SELECT c.id, u.username, c.date, c.content, c.is_deleted FROM comments c JOIN users u ON u.id = c.owner WHERE c.thread_id = $1 ORDER BY c.date ASC',
+        const query = {
+            text: `
+            SELECT c.id, 
+                   u.username, 
+                   c.date, 
+                   c.content, 
+                   c.is_deleted
+            FROM comments AS c
+            INNER JOIN users AS u ON c.owner = u.id
+            WHERE c.thread_id = $1 
+            ORDER BY c.date ASC
+        `,
             values: [threadId],
         }
-        const { rows } = await this._pool.query(commentsQuery)
 
-        return rows.map((comment) => ({
-            ...comment,
-            date: comment.date.toISOString(),
-        }))
+        const { rows } = await this._pool.query(query)
+
+        return rows.map((row) => {
+            return new DetailComment({
+                id: row.id,
+                username: row.username,
+                date: new Date(row.date).toISOString(),
+                content: row.content,
+                isDeleted: row.is_deleted,
+            })
+        })
     }
 }
 
