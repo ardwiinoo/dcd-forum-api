@@ -12,6 +12,7 @@ const UsersTableTestHelper = require('../../../../tests/UsersTableTestHelper')
 const ThreadsTableTestHelper = require('../../../../tests/ThreadsTableTestHelper')
 const CommentsTableTestHelper = require('../../../../tests/CommentsTableTestHelper')
 const RepliesTableTestHelper = require('../../../../tests/RepliesTableTestHelper')
+const DetailReply = require('../../../Domains/replies/entities/DetailReply')
 
 describe('ReplyRepositoryPostgres', () => {
     afterEach(async () => {
@@ -75,6 +76,9 @@ describe('ReplyRepositoryPostgres', () => {
             )
             expect(replies).toHaveLength(1)
             expect(replies).toEqual(expect.any(Array))
+            expect(replies[0].id).toEqual('reply-123')
+            expect(replies[0].content).toEqual('sebuah reply')
+            expect(replies[0].owner).toEqual('user-123')
         })
     })
 
@@ -102,6 +106,7 @@ describe('ReplyRepositoryPostgres', () => {
                 owner: 'user-123',
                 commentId: 'comment-123',
                 content: 'sebuah reply',
+                isDeleted: false,
             })
 
             const replyRepositoryPostgres = new ReplyRepositoryPostgres(
@@ -114,8 +119,24 @@ describe('ReplyRepositoryPostgres', () => {
                 'thread-123'
             )
 
+            const expectedReplies = new DetailReply({
+                id: 'reply-123',
+                content: 'sebuah reply',
+                date: new Date(replies[0].date).toISOString(),
+                username: 'ardwiinoo',
+                commentId: 'comment-123',
+                isDeleted: false,
+            })
+
             // Assert
             expect(Array.isArray(replies)).toBe(true)
+            expect(replies).toHaveLength(1)
+            expect(replies[0].id).toEqual(expectedReplies.id)
+            expect(replies[0].content).toEqual(expectedReplies.content)
+            expect(replies[0].date).toEqual(expectedReplies.date)
+            expect(replies[0].username).toEqual(expectedReplies.username)
+            expect(replies[0].commentId).toEqual(expectedReplies.commentId)
+            expect(replies[0].isDeleted).toEqual(expectedReplies.isDeleted)
         })
 
         it('should return an empty array when there are no replies for the given thread id', async () => {
@@ -148,6 +169,7 @@ describe('ReplyRepositoryPostgres', () => {
 
             // Assert
             expect(replies).toEqual([])
+            expect(Array.isArray(replies)).toBe(true)
         })
     })
 

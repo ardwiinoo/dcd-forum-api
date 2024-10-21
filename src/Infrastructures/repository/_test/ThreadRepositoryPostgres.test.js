@@ -9,6 +9,7 @@ const UserRepositoryPostgres = require('../UserRepositoryPostgres')
 const AddThread = require('../../../Domains/threads/entities/AddThread')
 const AddedThread = require('../../../Domains/threads/entities/AddedThread')
 const RegisterUser = require('../../../Domains/users/entities/RegisterUser')
+const DetailThread = require('../../../Domains/threads/entities/DetailThread')
 
 const NotFoundError = require('../../../Commons/exceptions/NotFoundError')
 
@@ -62,7 +63,12 @@ describe('ThreadRepositoryPostgress', () => {
             const threads = await ThreadsTableTestHelper.findThreadById(
                 'thread-123'
             )
+
             expect(threads).toHaveLength(1)
+            expect(threads[0].id).toEqual('thread-123')
+            expect(threads[0].title).toEqual('sebuah thread')
+            expect(threads[0].body).toEqual('sebuah body thread')
+            expect(threads[0].owner).toEqual(registeredUser.id)
         })
 
         it('should return added thread correctly', async () => {
@@ -189,11 +195,15 @@ describe('ThreadRepositoryPostgress', () => {
                 threadPayload.id
             )
 
+            const expectedThread = new DetailThread({
+                ...threadPayload,
+                date: thread.date,
+                username: userPayload.username,
+                comments: [],
+            })
+
             // Assert
-            expect(thread.id).toEqual(threadPayload.id)
-            expect(thread.title).toEqual(threadPayload.title)
-            expect(thread.body).toEqual(threadPayload.body)
-            expect(thread.username).toEqual(userPayload.username)
+            expect(thread).toStrictEqual(expectedThread)
         })
     })
 })
