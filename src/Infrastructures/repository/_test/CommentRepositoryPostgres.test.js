@@ -10,6 +10,7 @@ const ThreadRepositoryPostgres = require('../ThreadRepositoryPostgres')
 
 const AddComment = require('../../../Domains/comments/entities/AddComment')
 const AddedComment = require('../../../Domains/comments/entities/AddedComment')
+const DetailComment = require('../../../Domains/comments/entities/DetailComment')
 
 const NotFoundError = require('../../../Commons/exceptions/NotFoundError')
 const InvariantError = require('../../../Commons/exceptions/InvariantError')
@@ -96,6 +97,9 @@ describe('CommentRepositoryPostgres', () => {
                 'comment-123'
             )
             expect(comments).toHaveLength(1)
+            expect(comments[0].id).toEqual('comment-123')
+            expect(comments[0].content).toEqual('sebuah comment')
+            expect(comments[0].owner).toEqual(registeredUser.id)
         })
     })
 
@@ -296,8 +300,40 @@ describe('CommentRepositoryPostgres', () => {
                     'thread-123'
                 )
 
+            const expectedComment = new DetailComment({
+                id: 'comment-123',
+                username: 'dicoding',
+                date: new Date(comments[0].date).toISOString(),
+                content: 'sebuah comment',
+                isDeleted: false,
+            })
+
             // Assert
             expect(Array.isArray(comments)).toBe(true)
+            expect(comments).toHaveLength(1)
+            expect(comments[0].id).toEqual(expectedComment.id)
+            expect(comments[0].username).toEqual(expectedComment.username)
+            expect(comments[0].date).toEqual(expectedComment.date)
+            expect(comments[0].content).toEqual(expectedComment.content)
+            expect(comments[0].isDeleted).toEqual(expectedComment.isDeleted)
+        })
+
+        it('should return empty array when thread has no comment', async () => {
+            // Arrange
+            const commentRepositoryPostgres = new CommentRepositoryPostgres(
+                pool,
+                {}
+            )
+
+            // Action
+            const comments =
+                await commentRepositoryPostgres.getCommentsByThreadId(
+                    'thread-123'
+                )
+
+            // Assert
+            expect(Array.isArray(comments)).toBe(true)
+            expect(comments).toEqual([])
         })
     })
 })
