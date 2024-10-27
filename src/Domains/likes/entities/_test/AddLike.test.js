@@ -17,7 +17,7 @@ describe('a AddLike entities', () => {
         // Arrange
         const payload = {
             commentId: 123,
-            userId: true,
+            owner: true,
         }
 
         // Action and Assert
@@ -30,7 +30,7 @@ describe('a AddLike entities', () => {
         // Arrange
         const payload = {
             commentId: 'comment-123',
-            userId: 'user-123',
+            owner: 'user-123',
         }
 
         // Action
@@ -38,6 +38,6 @@ describe('a AddLike entities', () => {
 
         // Assert
         expect(newLike.commentId).toEqual(payload.commentId)
-        expect(newLike.userId).toEqual(payload.userId)
+        expect(newLike.owner).toEqual(payload.owner)
     })
 })
