@@ -1,8 +1,16 @@
+const CommentWithReplies = require('../../Domains/comments/entities/CommentWithReplies')
+
 class GetThreadUseCase {
-    constructor({ threadRepository, commentRepository, replyRepository }) {
+    constructor({
+        threadRepository,
+        commentRepository,
+        replyRepository,
+        likeRepository,
+    }) {
         this._threadRepository = threadRepository
         this._commentRepository = commentRepository
         this._replyRepository = replyRepository
+        this._likeRepository = likeRepository
     }
 
     async execute(useCaseParams) {
@@ -16,25 +24,30 @@ class GetThreadUseCase {
             threadId
         )
 
-        thread.comments = this._getRepliesForComment(comments, replies)
+        const commentsWithLikesAndReplies =
+            await this._mapCommentsWithRepliesAndLikes(comments, replies)
 
+        thread.comments = commentsWithLikesAndReplies
         return thread
     }
 
-    _getRepliesForComment(comments, replies) {
-        comments.forEach((comment) => {
-            const filteredReplies = replies
-                .filter((reply) => reply.commentId === comment.id)
-                .map((reply) => {
-                    delete reply.commentId
-
-                    return reply
+    async _mapCommentsWithRepliesAndLikes(comments, replies) {
+        return Promise.all(
+            comments.map(async (comment) => {
+                const likeCount =
+                    await this._likeRepository.getLikeCountByCommentId(
+                        comment.id
+                    )
+                const commentReplies = replies.filter(
+                    (reply) => reply.commentId === comment.id
+                )
+                return new CommentWithReplies({
+                    comment,
+                    replies: commentReplies,
+                    likeCount,
                 })
-
-            comment.replies = filteredReplies
-        })
-
-        return comments
+            })
+        )
     }
 }
 

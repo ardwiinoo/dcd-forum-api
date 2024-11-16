@@ -9,10 +9,10 @@ class AddLikeUseCase {
     async execute(params, owner) {
         const { threadId, commentId } = params
 
-        await this._commentRepository.verifyCommentAvailability(
+        await this._commentRepository.verifyCommentAvailability({
             commentId,
-            threadId
-        )
+            threadId,
+        })
 
         const newLike = new AddLike({
             commentId,
