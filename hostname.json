@@ -1,0 +1,16 @@
+{
+    "status": "success",
+    "message": "Record berhasil dibuat. Bila hostname belum bisa digunakan tunggu 1 jam untuk proses propagate.",
+    "data": {
+        "addedDNS": [
+            {
+                "hostname": "wild-eggs-nail-sleepily.a276.dcdg.xyz",
+                "ip": "SANGAT RAHASIA"
+            },
+            {
+                "hostname": "www.wild-eggs-nail-sleepily.a276.dcdg.xyz",
+                "ip": "SANGAT RAHASIA"
+            }
+        ]
+    }
+}
