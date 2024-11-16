@@ -22,7 +22,7 @@ const UserRepositoryPostgres = require('./repository/UserRepositoryPostgres')
 const ThreadRepositoryPostgres = require('./repository/ThreadRepositoryPostgres')
 const CommentRepositoryPostgres = require('./repository/CommentRepositoryPostgres')
 const ReplyRepositoryPostgres = require('./repository/ReplyRepositoryPostgres')
-const LikeRepositoryPosgres = require('./repository/LikeRepositoryPostgres')
+const LikeRepositoryPostgres = require('./repository/LikeRepositoryPostgres')
 
 // use case
 const AddUserUseCase = require('../Applications/use_case/AddUserUseCase')
@@ -115,7 +115,7 @@ container.register([
     },
     {
         key: LikeRepository.name,
-        Class: LikeRepositoryPosgres,
+        Class: LikeRepositoryPostgres,
         parameter: {
             dependencies: [
                 {
@@ -285,6 +285,10 @@ container.register([
                 {
                     name: 'replyRepository',
                     internal: ReplyRepository.name,
+                },
+                {
+                    name: 'likeRepository',
+                    internal: LikeRepository.name,
                 },
             ],
         },
